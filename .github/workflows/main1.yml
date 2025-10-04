@@ -1,0 +1,41 @@
+name: CI with Python Cache
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Python
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      # Step 3: Cache pip dependencies
+      - name: prime-cache-539c8ce
+        id: cache-step
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: cache-539c8ce
+          restore-keys: cache-539c8ce
+
+      # Step 4: Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      # Step 5: Show cache result
+      - name: Show cache result
+        run: echo "Cache hit/miss: ${{ steps.cache-step.outputs.cache-hit }}"
