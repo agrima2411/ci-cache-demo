@@ -1,0 +1,32 @@
+name: Cache Dependencies
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  cache-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Prime cache cache-539c8ce
+        id: prime-cache-539c8ce
+        uses: actions/cache@v4
+        with:
+          path: |
+            # adjust this path to what you want to cache, e.g., node_modules, .m2, .cache
+            node_modules
+          key: cache-539c8ce
+
+      - name: Show cache result
+        run: |
+          if [ -n "${{ steps.prime-cache-539c8ce.outputs.cache-hit }}" ]; then
+            echo "Cache hit!"
+          else
+            echo "Cache miss!"
+          fi
